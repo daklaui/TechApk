@@ -1,0 +1,79 @@
+{
+  "common": {
+    "text_deliveries": "الولادات",
+    "text_notification": "تنبيه",
+    "text_account": "الحساب",
+    "text_account_detail": "حساب المعلومات",
+    "text_edit_account": "تحرير الحساب",
+    "text_delivery_detail": "تفاصيل التسليم",
+    "text_delivery_address": "عنوان التسليم",
+    "text_pending": "قيد الانتظار",
+    "text_delivered": "تم التوصيل",
+    "text_all": "عرض الكل",
+    "text_cancel": "إلغاء",
+    "text_ok": "حسنا",
+    "text_show": "تبين",
+    "text_save": "حفظ",
+    "text_change_avatar": "تغيير الصورة الرمزية",
+    "text_assign": "تعيين",
+    "text_confirm": "تؤكد"
+  },
+  "login": {
+    "text_login": "ابدأ بتسجيل الدخول!",
+    "text_button_login": "تسجيل الدخول"
+  },
+  "home": {
+    "text_user": "مرحبًا {{name}} !",
+    "text_empty": "حاليا ، ليس لديك أي أوامر تسليم"
+  },
+  "notification": {
+    "text_read": "اقرأ",
+    "text_delivery_assign": "تم تعيين شخص التسليم",
+    "text_delivery_complete": "اكتمل التسليم"
+  },
+  "account": {
+    "text_user": "مرحبًا {{name}}",
+    "text_information": "معلومات",
+    "text_setting": "تحديد المزيد",
+    "text_edit_account": "تحرير الحساب",
+    "text_dark": "الوضع الداكن",
+    "text_language": "اللغات",
+    "text_title_logout": "تسجيل خروج",
+    "text_description_logout": "هل تريد تسجيل الخروج؟"
+  },
+  "account_detail": {
+    "text_first_name": "الاسم الاول",
+    "text_last_name": "الكنية",
+    "text_email": "عنوان بريد الكتروني",
+    "text_phone": "هاتف",
+    "text_button_edit": "تحرير الحساب"
+  },
+  "delivery_detail": {
+    "text_order": "طلب: #{{id}}",
+    "text_customer": "تفاصيل العملاء",
+    "text_store": "معلومات المتجر",
+    "text_customer_name": "الاسم الكامل",
+    "text_customer_phone": "رقم الهاتف",
+    "text_customer_address": "عنوان التسليم",
+    "text_store_name": "اسم المتجر",
+    "text_store_phone": "تخزين الهاتف",
+    "text_store_address": "عنوان المتجر",
+    "text_total": "المبلغ الإجمالي",
+    "text_text_delivered": "لقد سلمت بنجاح للعميل",
+    "text_button_delivered": "تم تسليم علامة"
+  },
+  "tabbar": {
+    "text_home": "الصفحة الرئيسية",
+    "text_deliveries": "الولادات",
+    "text_notification": "تنبيه",
+    "text_account": "الحساب"
+  },
+  "inputs": {
+    "text_email": "عنوان بريد الكتروني",
+    "text_password": "كلمه السر",
+    "text_first_name": "الاسم الاول",
+    "text_last_name": "الكنية",
+    "text_email_require": "البريد الإلكتروني *",
+    "text_phone": "هاتف"
+  }
+}
