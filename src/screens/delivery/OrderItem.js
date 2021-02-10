@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {useTheme} from '@react-navigation/native';
-import {StyleSheet, View, ViewPropTypes} from 'react-native';
+import {StyleSheet, View, ViewPropTypes,TouchableOpacity} from 'react-native';
 import Text from '../../components/Text';
 import Icon from '../../components/Icon';
 import Badge from '../../components/Badge';
@@ -13,31 +13,11 @@ import {shadowDefault} from '../../utils/shadow';
 
 function OrderItem(props) {
   const {colors} = useTheme();
-  const {delivery, style, t} = props;
-  if (!delivery) {
-    return null;
-  }
-  const {
-    order_id,
-    delivery_status,
-    items,
-    payment_method,
-    payment_remaining,
-    currency,
-  } = delivery;
-  const nameStatus =
-    delivery_status !== 'delivered' ? delivery_status : 'successful';
-  const item = items[0];
+  const {style,data} = props;
   return (
-    <View style={style}>
-      {delivery_status === 'pending' ? (
-        <View style={styles.viewAssign}>
-          <Text h3 medium h3Style={{color: colors.primary}}>
-            {t('common:text_assign')}
-          </Text>
-          <Text secondary>June 9, 2020 9:30 am</Text>
-        </View>
-      ) : null}
+
+    <View style={style} >
+     <TouchableOpacity onPress={()=>props.onClick()}> 
       <Card style={styles.container}>
         <Icon name="receipt" color={colors.secondary} size={20} />
         <View style={styles.right}>
@@ -46,32 +26,34 @@ function OrderItem(props) {
               h3
               medium
               h3Style={[styles.textOrderId, {color: colors.secondary}]}>
-              {t('delivery_detail:text_order', {id: order_id})}
+             {data.nom_du_session}
             </Text>
             <Badge
-              value={nameStatus}
+              value={data.niveau}
               badgeStyle={styles.badge}
               textStyle={styles.textBadge}
-              status={delivery_status === 'delivered' ? 'success' : 'error'}
+              status={data.niveau=="debutant"?'success':data.niveau=="intermédiaire"?'warning':'error'}
             />
           </View>
           <Text third style={styles.time}>
-            June 9, 2020 9:30 am
+          {data.date_de_début} -  {data.date_de_fin}
           </Text>
           <View style={styles.item}>
             <Text secondary medium h4 h4Style={styles.nameItem}>
-              {item.quantity}x <Text>{item.name}</Text>
+           <Text>Nom de formateur</Text>
             </Text>
             <Text h4 medium h4Style={{color: colors.primary}}>
-              {currencyFormatter(payment_remaining, currency)}
+             {data.prix} TND
             </Text>
           </View>
           <Text h6 h6Style={styles.payment}>
-            {payment_method}
+          Nombre des palces disponblie :  {data.nb_places-data.nb_inscrits}
           </Text>
         </View>
       </Card>
+      </TouchableOpacity>
     </View>
+
   );
 }
 

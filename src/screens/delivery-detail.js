@@ -1,7 +1,7 @@
 import * as React from 'react';
-import {useTranslation} from 'react-i18next';
-import {useTheme} from '@react-navigation/native';
-import {StyleSheet, View, ScrollView} from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '@react-navigation/native';
+import { StyleSheet, View, ScrollView, Dimensions, TouchableOpacity, Text as ReactText } from 'react-native';
 import Text from '../components/Text';
 import Icon from '../components/Icon';
 import Button from '../components/Button';
@@ -13,16 +13,31 @@ import OrderItem from './delivery/OrderItem';
 import InfoUser from './delivery/InfoUser';
 import Total from './delivery/Total';
 
-import {markDelivery} from '../services/delivery-service';
-import {AuthContext} from '../utils/auth-context';
-
+import { markDelivery } from '../services/delivery-service';
+import { getFormationById ,inscription,getSessionByIdFormation} from '../services/formationService';
+import { AuthContext } from '../utils/auth-context';
+import { SafeAreaView } from 'react-native';
+import { Image } from 'react-native';
+import ItemDelivery from '../containers/ItemDelivery';
+import { Alert } from 'react-native';
+const { width, height } = Dimensions.get('window');
 function DeliveryDetailScreen(props) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
-  const {userToken} = React.useContext(AuthContext);
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const {userToken,user} = React.useContext(AuthContext);
+  const [item, setItem] = React.useState({});
+  const [listSessions, setListSessions] = React.useState([]);
+  const [idSession, setIdSession] = React.useState("");
   const [visible, setVisible] = React.useState(false);
-  const {navigation, route} = props;
+  const { navigation, route } = props;
   const data = route?.params?.data ?? null;
+  //const idFormation = route?.params?.idformation ?? null;
+  console.log("id = " + user.id);
+  const handelModel = (id) => {
+  
+    setIdSession(id);
+    setVisible(true);
+  };
   const header = (
     <Header
       leftComponent={
@@ -35,22 +50,26 @@ function DeliveryDetailScreen(props) {
       }
       centerComponent={
         <Text h3 medium>
-          {t('common:text_delivery_detail')}
+          {item.titre}
         </Text>
       }
     />
   );
 
-  if (!data || !data?.delivery_id) {
-    return (
-      <View style={styles.container}>
-        {header}
-        <View style={styles.empty}>
-          <Text>Empty</Text>
-        </View>
-      </View>
-    );
+  React.useEffect(() => {
+    getDetFormation();
+  }, []);
+
+
+  const getDetFormation = async () => {
+    const response = await getFormationById(data);
+    const responseSession=await getSessionByIdFormation(data);
+ 
+    setItem(response.data);
+    setListSessions(responseSession.data);
   }
+
+
   const footer =
     data?.delivery_status === 'pending' ? (
       <Card style={styles.footer}>
@@ -63,17 +82,10 @@ function DeliveryDetailScreen(props) {
   const clickConfirm = async () => {
     try {
       setVisible(false);
-      const result = await markDelivery(
-        {
-          delivery_id: data?.delivery_id,
-        },
-        userToken,
-      );
-      if(result?.status === true && route?.params?.onGoBack) {
-        route.params.onGoBack();
-      }
-      navigation.goBack();
+      const result = await inscription(idSession,user.id);
+       alert(result.data);
     } catch (e) {
+    
       console.log('error', e);
     }
   };
@@ -81,18 +93,86 @@ function DeliveryDetailScreen(props) {
   return (
     <View style={styles.container}>
       {header}
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <OrderItem delivery={data} style={styles.item} t={t}/>
-        <InfoUser
-          customer={data.customer}
-          store={data.store}
-          shipping={data.shipping_address}
-          style={styles.item}
-          t={t}
-        />
-        <Total delivery={data} style={styles.item} t={t}/>
-      </ScrollView>
-      {footer}
+
+
+      <View style={{ flex: 1, flexDirection: "column" }}>
+        <Image source=
+          {{ uri: item.image }}
+          style={{
+            width: width - 30,
+            height: height / 4,
+            borderRadius: 10, alignSelf: 'center',
+          }} />
+
+        <View
+          style={{
+
+            marginLeft: 20,
+            marginRight: 20,
+            marginTop: 5,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <ReactText style={{ fontSize: 20, fontWeight: 'bold' }}>{item.titre}</ReactText>
+
+        </View>
+        <ReactText numberOfLines={4} ellipsizeMode="tail"
+          style={{
+            color: 'grey',
+            margin: 20,
+            fontSize: 16,
+            lineHeight: 22,
+
+          }}>
+            
+          {item.description}
+          
+        </ReactText>
+        <View
+          style={{
+
+            marginLeft: 20,
+            marginRight: 20,
+            marginBottom: 10,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <ReactText style={{ fontSize: 20, fontWeight: 'bold' }}>{"Sessions"}</ReactText>
+          <View style={styles.priceTag}>
+            <ReactText
+              style={{
+                marginLeft: 15,
+                color: "white",
+                fontWeight: 'bold',
+                fontSize: 16,
+              }}>
+              Total Sessions : {listSessions == null ? 0 : listSessions.length}
+            </ReactText>
+          </View>
+        </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+      
+          {listSessions && listSessions.map((it) => (
+       
+           <OrderItem style={styles.item} data={it} onClick={()=>handelModel(it.id)} />
+
+          ))}
+          {/* <OrderItem style={styles.item} onClick={handelModel} />
+          <OrderItem style={styles.item} onClick={handelModel} />
+          <OrderItem style={styles.item} onClick={handelModel} />
+          <OrderItem style={styles.item} onClick={handelModel} />
+          <OrderItem style={styles.item} onClick={handelModel} />
+          <OrderItem style={styles.item} onClick={handelModel} />
+          <OrderItem style={styles.item} onClick={handelModel} />
+          <OrderItem style={styles.item} onClick={handelModel} />
+        */}
+
+        </ScrollView>
+
+      </View>
+
       <Modal
         visible={visible}
         setModalVisible={value => setVisible(value)}
@@ -105,7 +185,7 @@ function DeliveryDetailScreen(props) {
             <Icon name="check-decagram" size={30} color={colors.primary} />
           </Opacity>
           <Text h4 medium h4Style={styles.textModal}>
-            {t('delivery_detail:text_text_delivered')}
+            voulez vous  inscrire a cette formation ?
           </Text>
           <View style={styles.viewButtonModal}>
             <Button
@@ -126,6 +206,7 @@ function DeliveryDetailScreen(props) {
           </View>
         </View>
       </Modal>
+
     </View>
   );
 }
@@ -133,6 +214,7 @@ function DeliveryDetailScreen(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column"
   },
   empty: {
     flex: 1,
@@ -176,6 +258,52 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     marginHorizontal: 5,
+  },
+
+  detailsContainer: {
+    flex: 0.55,
+    backgroundColor: "#ecf0f1",
+    marginHorizontal: 7,
+    marginBottom: 7,
+    borderRadius: 20,
+    marginTop: 30,
+    paddingTop: 30,
+  },
+  line: {
+    width: 25,
+    height: 2,
+    backgroundColor: "#ecf0f1",
+    marginBottom: 5,
+    marginRight: 3,
+  },
+  borderBtn: {
+    borderColor: 'grey',
+    borderWidth: 1,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 60,
+    height: 40,
+  },
+  borderBtnText: { fontWeight: 'bold', fontSize: 28 },
+  buyBtn: {
+    width: "100%",
+    height: 50,
+    top: 130,
+    backgroundColor: "#253575",
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30,
+
+
+  },
+  priceTag: {
+    backgroundColor: "#253575",
+    width: 170,
+    height: 40,
+    justifyContent: 'center',
+    borderTopLeftRadius: 25,
+    borderBottomLeftRadius: 25,
   },
 });
 

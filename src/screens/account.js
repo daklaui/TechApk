@@ -107,7 +107,7 @@ function AccountScreen(props) {
     changeLanguage(selectLanguage);
     setTimeout(() => reloadApp(selectLanguage), 2000);
   };
-  const nameUser = truncate(user?.display_name ?? '',{
+  const nameUser = truncate(user?.nom ?? '',{
     length: 12,
     separator: '...',
   });
@@ -141,6 +141,7 @@ function AccountScreen(props) {
                 type: 'material-community',
                 color: colors.secondaryText,
               }}
+              
               overlayContainerStyle={styles.avatar}
               {...propAvatar}
             />
@@ -149,7 +150,7 @@ function AccountScreen(props) {
                 {t('account:text_user', {name: nameUser})}
               </Text>
               <Text h6 fifth>
-                {user?.user_email}
+                {user?.email}
               </Text>
             </View>
             <Icon

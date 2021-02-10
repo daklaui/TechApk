@@ -1,23 +1,25 @@
 import * as React from 'react';
-import {useTranslation} from 'react-i18next';
-import {useTheme} from '@react-navigation/native';
-import {StyleSheet, View} from 'react-native';
-import {Avatar} from 'react-native-elements';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '@react-navigation/native';
+import { StyleSheet, View } from 'react-native';
+import { Avatar } from 'react-native-elements';
 import Text from '../components/Text';
 import Icon from '../components/Icon';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import Header from '../containers/Header';
 
-import {shadowDefault} from '../utils/shadow';
-import {AuthContext} from '../utils/auth-context';
-import {gray2} from '../configs/colors';
+import { shadowDefault } from '../utils/shadow';
+import { AuthContext } from '../utils/auth-context';
+import { DownloadImages } from '../services/etudiantService';
+import { gray2 } from '../configs/colors';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function TextLine(props) {
-  const {title, subTitle, style} = props;
+  const { title, subTitle, style } = props;
   return (
     <View style={style}>
-      <Text h6 third h6Style={{marginBottom: 5}}>
+      <Text h6 third h6Style={{ marginBottom: 5 }}>
         {subTitle}
       </Text>
       <Text h4 medium>
@@ -28,15 +30,33 @@ function TextLine(props) {
 }
 
 function InformationAccountScreen(props) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
-  const {navigation} = props;
-  const {user} = React.useContext(AuthContext);
-  const propsAvatar = user?.avatar
-    ? {
-        source: {uri: user.avatar}
-      }
-    : {};
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const { navigation } = props;
+  const { user } = React.useContext(AuthContext);
+  const [photo,setPhoto]=React.useState("");
+    
+  React.useEffect(() => {
+    getImage(user.photo);
+    console.log(user.photo);
+  },[]);
+
+
+
+
+  const getImage =(photoname)=>
+  {
+     setPhoto("");
+     DownloadImages(photoname).then((data)=>{
+      setPhoto("data:image/png;base64,"+data.data)
+     })
+  } 
+  const propsAvatar = 
+  {
+      source: {uri:photo}
+  };
+
+   
   return (
     <View style={styles.container}>
       <Header
@@ -55,6 +75,7 @@ function InformationAccountScreen(props) {
         }
       />
       <Card style={styles.viewInfo}>
+       <TouchableOpacity onPress={()=>{user.type=="etudiant"?props.navigation.navigate("ProfileScreen",{id:user.id,updateImage:getImage}):null}}>
         <Avatar
           size={60}
           rounded
@@ -67,33 +88,43 @@ function InformationAccountScreen(props) {
           overlayContainerStyle={styles.avatar}
           {...propsAvatar}
         />
+        </TouchableOpacity>
         <View style={styles.infoRight}>
           <TextLine
-            title={user?.first_name}
+            title={user?.nom}
             subTitle={t('account_detail:text_first_name')}
             style={styles.viewTextInfo}
           />
+
           <TextLine
-            title={user?.last_name}
-            subTitle={t('account_detail:text_last_name')}
-            style={styles.viewTextInfo}
-          />
-          <TextLine
-            title={user?.user_email}
+            title={user?.email}
             subTitle={t('account_detail:text_email')}
             style={styles.viewTextInfo}
           />
+
           <TextLine
-            title={"+84 900163398"}
+            title={user?.date_de_naissance}
+            subTitle={t('account_detail:text_date_naissence')}
+            style={styles.viewTextInfo}
+          />
+          <TextLine
+            title={user?.adresse}
+            subTitle={t('account_detail:text_address')}
+            style={styles.viewTextInfo}
+          />
+
+          <TextLine
+            title={user?.num_tel}
             subTitle={t('account_detail:text_phone')}
           />
+          
         </View>
       </Card>
       <Button
-        title={t('account_detail:text_button_edit')}
+        title={t('common:text_edit_account_password')}
         containerStyle={styles.containerButton}
         buttonStyle={styles.button}
-        onPress={() => navigation.navigate('EditAccountScreen')}
+        onPress={() => navigation.navigate('EditPasswordScreen')}
       />
     </View>
   );

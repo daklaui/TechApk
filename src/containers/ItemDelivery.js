@@ -13,11 +13,8 @@ function ItemDelivery(props) {
   const navigation = useNavigation();
   const {colors} = useTheme();
   const {item, style, onGoBack} = props;
-  if (!item) {
-    return null;
-  }
-  const colorDot =
-    item?.delivery_status === 'delivered' ? colors.success : colors.error;
+
+  const colorDot = colors.success ;//: colors.error;
   return (
     <Card
       Component={TouchableOpacity}
@@ -31,15 +28,15 @@ function ItemDelivery(props) {
       <View style={styles.right}>
         <View style={styles.headerRight}>
           <Text medium h4 h4Style={{color: colors.secondary}}>
-            #{item.order_id}
+            Nom de Session
           </Text>
           <Text medium h4 h4Style={{color: colors.primary}}>
-            {currencyFormatter(item.payment_remaining, item.currency)}
+            200 TND
           </Text>
         </View>
         <View style={styles.viewName}>
           <Text h4 medium style={styles.name}>
-            {item?.item?.name ?? ''}
+            Nom de formateur
           </Text>
           <Icon
             name="chevron-right"
@@ -49,7 +46,7 @@ function ItemDelivery(props) {
           />
         </View>
         <Text third h6>
-          {item.payment_method}
+          22/01/2021 - 22/03/2021
         </Text>
       </View>
     </Card>

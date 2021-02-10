@@ -1,6 +1,8 @@
 import * as React from 'react';
+
+import OneSignal from 'react-native-onesignal';
 import {withTranslation} from 'react-i18next';
-import {StyleSheet, View, FlatList, ActivityIndicator, Image} from 'react-native';
+import {StyleSheet, View, FlatList, ScrollView, Image} from 'react-native';
 import Text from '../components/Text';
 import Card from '../components/Card';
 import ItemDelivery from '../containers/ItemDelivery';
@@ -12,162 +14,48 @@ import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {AuthContext} from '../utils/auth-context';
 import {getDeliveries, getDeliveryStat} from '../services/delivery-service';
 import {shadowDefault} from '../utils/shadow';
-
+import { ONE_SIGNAL_APP_ID } from '../configs/constant';
+import NotificationPush from './delivery/NotificationPush';
 class HomeScreen extends React.Component {
   static contextType = AuthContext;
   constructor(props) {
-    super(props);
+    super(props);  
+    OneSignal.init(ONE_SIGNAL_APP_ID);
+    OneSignal.inFocusDisplaying(2);
+   
     this.state = {
-      deliveries: [],
-      status: 'pending',
-      page: 1,
+      notifications: [],
       loading: true,
-      loadingMore: false,
-      refreshing: false,
-      countStatus: {
-        pending: 0,
-        delivered: 0,
-      },
     };
   }
   componentDidMount() {
-    this.fetchStatus();
-    this.fetchDeliveries();
+  
+    OneSignal.addEventListener('received', (notification) => {
+      console.log('Notification received: ', notification);
+     this.setState({notifications:[...this.state.notifications,notification.payload.additionalData]});
+      // const notificationToSave = {
+      //   ...notification.payload.additionalData,
+      //   body: notification.payload.body,
+      //   title: notification.payload.title,
+      // };
+      //console.log(notificationToSave);
+    });
+  
+this.setState({loading:false});
   }
-  fetchStatus = async () => {
-    try {
-      const user = this?.context?.user ?? {};
-      const data = await getDeliveryStat(user.ID);
-      this.setState({
-        countStatus: data,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  
 
-  fetchDeliveries = async () => {
-    try {
-      const {page, status} = this.state;
-      const query = {
-        page: page,
-        per_page: 10,
-        orderby: 'delivery_id',
-        order: 'desc',
-        delivery_status: status,
-      };
-      const userToken = this?.context?.userToken ?? '';
-      const data = await getDeliveries(query, userToken);
-      if (data.length <= 10 && data.length > 0) {
-        this.setState(prevState => ({
-          deliveries:
-            page === 1 ? Array.from(data) : [...prevState.deliveries, ...data],
-          loading: false,
-          loadingMore: data.length === 10,
-          refreshing: false,
-        }));
-      } else {
-        this.setState({
-          loadingMore: false,
-          loading: false,
-        });
-      }
-      // setDeliveries(data);
-    } catch (e) {
-      console.log(e);
-      this.setState({
-        loading: false,
-        loadingMore: false,
-      });
-    }
-  };
-  renderFooter = () => {
-    if (!this.state.loadingMore) {
-      return null;
-    }
-
-    return <ActivityIndicator animating size="small" />;
-  };
-
-  handleRefresh = () => {
-    this.setState(
-      {
-        page: 1,
-        refreshing: true,
-      },
-      () => {
-        this.fetchDeliveries();
-      },
-    );
-  };
-
-  handleLoadMore = () => {
-    const {loadingMore} = this.state;
-
-    if (loadingMore) {
-      this.setState(
-        prevState => ({
-          page: prevState.page + 1,
-          loadingMore: true,
-        }),
-        this.fetchDeliveries,
-      );
-    }
-  };
-
-  updateStatus = value => {
-    this.setState(
-      {
-        status: value,
-        deliveries: [],
-        page: 1,
-        loading: true,
-        loadingMore: false,
-        refreshing: false,
-      },
-      this.fetchDeliveries,
-    );
-  };
-
-  onGoBack = () => {
-    this.fetchStatus();
-    this.updateStatus('delivered');
-  };
+ 
 
   render() {
     const {t} = this.props;
-    const {deliveries, status, countStatus, refreshing, loading} = this.state;
+    const {notifications,loading} = this.state;
     const user = this?.context?.user;
-    const listStatus = [
-      {
-        type: 'delivered',
-        name: t('common:text_delivered'),
-        count: countStatus?.delivered ?? 0,
-      },
-      {
-        type: 'pending',
-        name: t('common:text_pending'),
-        count: countStatus?.pending ?? 0,
-      },
-    ];
-    const selectStatus =
-      listStatus.find(value => value.type === status) || listStatus[0];
+   
     const headerComponent = (
       <View style={styles.header}>
         <InfoUser style={styles.user} user={user} />
-        <SelectStatusDelivery
-          style={styles.shipping}
-          status={status}
-          selectStatus={this.updateStatus}
-          countStatus={countStatus}
-          list={listStatus}
-        />
-        {(loading || (!loading && deliveries.length > 0)) &&
-        selectStatus?.name ? (
-          <Text h3 medium h3Style={styles.testStatus}>
-            {selectStatus.name}
-          </Text>
-        ) : null}
+     
         {loading && (
           <Loading
             ItemComponent={LoadingItemDelivery}
@@ -176,7 +64,7 @@ class HomeScreen extends React.Component {
         )}
       </View>
     );
-    if (!loading && deliveries.length < 1) {
+    if (!loading && notifications.length < 1) {
       return (
         <View style={styles.viewEmpty}>
           {headerComponent}
@@ -190,27 +78,26 @@ class HomeScreen extends React.Component {
       );
     }
     return (
-      <FlatList
-        data={deliveries}
-        keyExtractor={item => item.delivery_id}
-        renderItem={({item, index}) => (
-          <ItemDelivery
-            item={item}
-            style={[
-              styles.itemDelivery,
-              index === deliveries.length - 1 && styles.itemDeliveryEnd,
-            ]}
-            onGoBack={this.onGoBack}
-          />
-        )}
-        ListHeaderComponent={headerComponent}
-        onEndReached={this.handleLoadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={this.renderFooter}
-        refreshing={refreshing}
-        onRefresh={this.handleRefresh}
-        showsVerticalScrollIndicator={false}
-      />
+      <View style={styles.viewEmpty}>
+      {headerComponent}
+  
+      <ScrollView showsVerticalScrollIndicator={false}>
+      {
+        notifications&&notifications.map(data=>(
+          
+          <NotificationPush style={styles.item} data={data} onClick={()=>{}}/>
+          
+        ))
+      }
+
+  </ScrollView>
+    
+    </View>
+     
+  
+  
+
+
     );
   }
 }
@@ -243,6 +130,10 @@ const styles = StyleSheet.create({
   },
   viewEmpty: {
     flex: 1,
+  },
+  item: {
+    marginBottom: 30,
+    marginHorizontal: 20,
   },
   cardEmpty: {
     flex: 1,

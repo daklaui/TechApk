@@ -1,30 +1,31 @@
 {
   "common": {
-    "text_deliveries": "Deliveries",
-    "text_notification": "Notification",
-    "text_account": "Account",
-    "text_account_detail": "Information Account",
-    "text_edit_account": "Edit Account",
-    "text_delivery_detail": "Delivery Details",
+    "text_deliveries": "Formations",
+    "text_notification": "Mes Formations",
+    "text_account": "Compte",
+    "text_account_detail": "Information de Compte",
+    "text_edit_account": "Modifier le compte",
+    "text_edit_account_password": "Modifier le mot de passe",
+    "text_delivery_detail": "Detail de formation",
     "text_delivery_address": "Delivery Address",
     "text_pending": "Pending",
     "text_delivered": "Delivered",
-    "text_all": "Show all",
-    "text_cancel": "Cancel",
+    "text_all": "Afficher tout",
+    "text_cancel": "Annuler",
     "text_ok": "OK",
-    "text_show": "Show",
-    "text_save": "Save",
-    "text_change_avatar": "Change Avatar",
+    "text_show": "Afficher",
+    "text_save": "Enregistrer",
+    "text_change_avatar": "Modifier Avatar",
     "text_assign": "Assigned",
-    "text_confirm": "Confirm"
+    "text_confirm": "Confirmer"
   },
   "login": {
-    "text_login": "Start with Login !",
+    "text_login": "Commencez par vous connecter !",
     "text_button_login": "Login"
   },
   "home": {
-    "text_user": "Hi, {{name}} !",
-    "text_empty": "Currently, You do not have any delivery orders"
+    "text_user": "Bonjour, {{name}} !",
+    "text_empty": ""
   },
   "notification": {
     "text_read": "Read",
@@ -32,27 +33,29 @@
     "text_delivery_complete": "Delivery Complete"
   },
   "tabbar": {
-    "text_home": "Home",
-    "text_deliveries": "Deliveries",
-    "text_notification": "Notification",
-    "text_account": "Account"
+    "text_home": "Accueil",
+    "text_deliveries": "Formations",
+    "text_notification": "Mes Formation",
+    "text_account": "Mon Compte"
   },
   "account": {
-    "text_user": "Hi, {{name}}",
+    "text_user": "Bonjour, {{name}}",
     "text_information": "Information",
-    "text_setting": "Setting More",
-    "text_edit_account": "Edit Account",
+    "text_setting": "Réglages",
+    "text_edit_account": "Modifier le compte",
     "text_dark": "DarkMode",
-    "text_language": "Languages",
-    "text_title_logout": "Logout",
-    "text_description_logout": "Do you want logout?"
+    "text_language": "Langues",
+    "text_title_logout": "Se déconnecter",
+    "text_description_logout": "Voulez-vous vous déconnecter?"
   },
   "account_detail": {
-    "text_first_name": "First Name",
-    "text_last_name": "Last Name",
-    "text_email": "Email Address",
-    "text_phone": "Phone",
-    "text_button_edit": "Edit Account"
+    "text_first_name": "Nom",
+    "text_last_name": "Prenom",
+    "text_email": "Email",
+    "text_date_naissence": "Date de naissence",
+    "text_address": "address",
+    "text_phone": "Telephone",
+    "text_button_edit": "Modifier le compte"
   },
   "delivery_detail": {
     "text_order": "Order: #{{id}}",
@@ -69,11 +72,17 @@
     "text_button_delivered": "Mark Delivered"
   },
   "inputs": {
-    "text_email": "Email Address",
-    "text_password": "Password",
-    "text_first_name": "First Name",
+    "text_email": "Email",
+    "text_datenais": "Date de naissence",
+    "text_password": "Mot de passe",
+    "text_first_name": "Nom et Prenom",
     "text_last_name": "Last Name",
     "text_email_require": "Email *",
-    "text_phone": "Phone"
+    "text_adresse": "Adresse",
+    "text_cin": "Cin",
+    "text_phone": "Telephone",
+    "text_old_password": "Ancien mot de passe",
+    "text_new_password": "Nouveau mot de passe",
+    "text_confirm_password": "Confirmer mot de passe"
   }
 }

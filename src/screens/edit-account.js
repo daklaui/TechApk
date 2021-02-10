@@ -10,8 +10,8 @@ import ThemeView from '../components/ThemeView';
 import Header from '../containers/Header';
 
 import {AuthContext} from '../utils/auth-context';
-import {updateCustomer} from '../services/auth-service';
-
+import {updateEtudiant} from '../services/etudiantService';
+import {updateFormateur} from '../services/formateurServices';
 const initNotification = {
   message: null,
   type: 'error',
@@ -22,40 +22,78 @@ function EditAccountScreen(props) {
   const {t} = useTranslation();
   const {navigation} = props;
   const {user, userToken, updateUser} = React.useContext(AuthContext);
-  const [first_name, setFirstName] = React.useState(user?.first_name ?? '');
-  const [last_name, setLastName] = React.useState(user?.last_name ?? '');
-  const [email, setEmail] = React.useState(user?.user_email ?? '');
+  const [fullName, setFullName] = React.useState(user?.nom ?? '');
+  const [email, setEmail] = React.useState(user?.email ?? '');
+  const [cin, setCin] = React.useState(user?.cin ?? '');
+  const [dateDeNaissence, setDateDeNaissence] = React.useState(user?.date_de_naissance ?? '');
+  const [adresse, setAdresse] = React.useState(user?.adresse ?? '');
+  const [phone, setPhone] = React.useState(user?.num_tel ?? '');
+
   const [loading, setLoading] = React.useState(false);
   const [notification, setNotification] = React.useState(initNotification);
 
   const saveCustomer = async () => {
-    try {
-      const dataUpdate = {
-        first_name,
-        last_name,
-        email,
-      };
-
-      await updateCustomer(user?.ID, dataUpdate, userToken);
-      setLoading(false);
-      const dataNotification = {
-        message: 'Update customer success',
-        type: 'success',
-      };
-      setNotification(dataNotification);
-      updateUser({
-        first_name,
-        last_name,
-        user_email: email,
-      });
-    } catch (e) {
-      setLoading(false);
-      const dataNotification = {
-        message: e.message,
-        type: 'error',
-      };
-      setNotification(dataNotification);
+    if(user.type=="etudiant")
+    {
+      try {
+        const etudiantUpdate = {
+          "nom": fullName,
+          "email": email,
+          "num_tel": phone,
+          "date_de_naissance": dateDeNaissence,
+          "adresse": adresse,
+          "cin": cin,
+        };
+  
+     let etudiantData=   await updateEtudiant(etudiantUpdate,user.id);
+        setLoading(false);
+        const dataNotification = {
+          message: 'Update etudiant success',
+          type: 'success',
+        };
+        setNotification(dataNotification);
+        console.log(etudiantData.data)
+       updateUser(etudiantData.data);
+      } catch (e) {
+        setLoading(false);
+        const dataNotification = {
+          message: e.message,
+          type: 'error',
+        };
+        setNotification(dataNotification);
+      }
     }
+    else
+    {
+      try {
+        const formateurUpdate = {
+          "nom": fullName,
+          "email": email,
+          "num_tel": phone,
+          "date_de_naissance": dateDeNaissence,
+          "adresse": adresse,
+          "cin": cin,
+        };
+  
+     let formateurData=   await updateFormateur(formateurUpdate,user.id);
+        setLoading(false);
+        const dataNotification = {
+          message: 'Update  success',
+          type: 'success',
+        };
+        setNotification(dataNotification);
+        console.log(formateurData.data)
+       updateUser(formateurData.data);
+      } catch (e) {
+        setLoading(false);
+        const dataNotification = {
+          message: e.message,
+          type: 'error',
+        };
+        setNotification(dataNotification);
+      }
+    }
+   
   };
   const clickSave = () => {
     setLoading(true);
@@ -97,21 +135,40 @@ function EditAccountScreen(props) {
             ) : null}
             <Input
               label={t('inputs:text_first_name')}
-              value={first_name}
-              onChangeText={setFirstName}
+              value={fullName}
+              onChangeText={setFullName}
               secondary
             />
             <Input
-              label={t('inputs:text_last_name')}
-              value={last_name}
-              onChangeText={setLastName}
+              label={t('inputs:text_cin')}
+              value={cin}
+              onChangeText={setCin}
               secondary
             />
             <Input
-              label={t('inputs:text_email_require')}
+              label={t('inputs:text_email')}
               keyboardType="email-address"
               value={email}
               onChangeText={setEmail}
+              secondary
+            />
+              <Input
+              label={t('inputs:text_datenais')}
+             
+              value={dateDeNaissence}
+              onChangeText={setDateDeNaissence}
+              secondary
+            />
+              <Input
+              label={t('inputs:text_phone')}
+              value={phone}
+              onChangeText={setPhone}
+              secondary
+            />
+             <Input
+              label={t('inputs:text_adresse')}
+              value={adresse}
+              onChangeText={setAdresse}
               secondary
             />
             <Button

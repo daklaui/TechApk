@@ -10,6 +10,7 @@ import Icon from '../components/Icon';
 import {shadowTabBar} from '../utils/shadow';
 
 function TabBar(props) {
+
   const {t} = useTranslation();
   const {colors} = useTheme();
   const {state, navigation} = props;
@@ -17,16 +18,24 @@ function TabBar(props) {
 
   const insets = useSafeAreaInsets();
 
-  const data = [
+  let data = []
+if(state.routeNames.indexOf("CalanderScreen")==-1)
+{
+  data = [
     {
       icon: 'home',
       name: t('tabbar:text_home'),
       router: 'HomeScreen',
     },
     {
-      icon: 'truck-fast',
+      icon: 'calendar-month',
+      name: 'Calander',
+      router: 'CalanderEtudiant',
+    },
+    {
+      icon: 'text-box-search',
       name: t('tabbar:text_deliveries'),
-      router: 'DeliveryScreen',
+      router: 'FormationsScreen',
     },
     {
       icon: 'bell',
@@ -37,8 +46,37 @@ function TabBar(props) {
       icon: 'account-circle',
       name: t('tabbar:text_account'),
       router: 'AccountScreen',
+    }
+  ];
+}
+else
+{
+  data = [
+    {
+      icon: 'home',
+      name: t('tabbar:text_home'),
+      router: 'HomeScreen',
+    },
+   
+    {
+      icon: 'text-box-search',
+      name: 'Mes Formations',
+      router: 'FormationByFormateur',
+    },
+    {
+      icon: 'calendar-month',
+      name: 'Calander',
+      router: 'CalanderScreen',
+    },
+    {
+      icon: 'account-circle',
+      name: t('tabbar:text_account'),
+      router: 'AccountScreen',
     },
   ];
+}
+
+  
 
   return (
     <Card

@@ -9,8 +9,9 @@ function InfoUser(props) {
   const {t} = useTranslation();
   const {user, style} = props;
   return (
+  
     <View style={style && style}>
-      <Text h2 medium h2Style={styles.name}>{t('home:text_user', {name: user?.display_name})}</Text>
+      <Text h2 medium h2Style={styles.name}>{t('home:text_user', {name: user?.nom})}</Text>
       <Text secondary>{getDate()}</Text>
     </View>
   );
