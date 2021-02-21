@@ -187,14 +187,7 @@ class NotificationScreen extends React.Component {
               {'List Sessions'}
             </Text>
           }
-          rightComponent={
-            <FilterIcon
-              title={`${statusSelect?.name}${
-                isRead ? `, ${t('notification:text_read')}` : ''
-              }`}
-              onPress={() => this.setState({visitModal: true})}
-            />
-          }
+          
           centerContainerStyle={styles.header}
         />
         {loading ? (

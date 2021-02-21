@@ -2,12 +2,26 @@ import React from 'react'
 import { View, StyleSheet, Text, Image, Dimensions } from 'react-native'
 
 const { width, height } = Dimensions.get('window')
-
+import { DownloadImages } from '../services/etudiantService';
 
 const Item = ({ item }) => {
+    const[photo,setPhoto]=React.useState();
+
+   React.useEffect(() => {
+    getImage(item.image)
+      
+   }, [])
+   const getImage =(photoname)=>
+    {
+       setPhoto("");
+       DownloadImages(photoname).then((data)=>{
+        setPhoto("data:image/png;base64,"+data.data)
+       })
+    } 
+
     return (
         <View style={styles.cardView}>
-            <Image style={styles.image} source={{ uri: item.image }} />
+            <Image style={styles.image} source={{ uri: photo }} />
             <View style={styles.textView}>
                 <Text style={styles.itemTitle}> {item.titre}</Text>
               

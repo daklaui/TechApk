@@ -231,9 +231,7 @@ function AccountScreen(props) {
               </View>
             </TouchableOpacity>
           </Card>
-          <Text h6 third h6Style={styles.nameFooter}>
-            2020 Rnlab.io
-          </Text>
+          
         </View>
         <ModalLanguage
           visitModal={visitModal}

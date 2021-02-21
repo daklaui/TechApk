@@ -46,7 +46,12 @@ if(state.routeNames.indexOf("CalanderScreen")==-1)
       icon: 'account-circle',
       name: t('tabbar:text_account'),
       router: 'AccountScreen',
-    }
+    },
+    {
+      icon: 'message-text-outline',
+      name: 'Chat',
+      router: 'ChatScreen',
+    },
   ];
 }
 else
@@ -67,11 +72,18 @@ else
       icon: 'calendar-month',
       name: 'Calander',
       router: 'CalanderScreen',
-    },
+    }, 
+
+
     {
       icon: 'account-circle',
       name: t('tabbar:text_account'),
       router: 'AccountScreen',
+    },
+    {
+      icon: 'message-text-outline',
+      name: 'Chat',
+      router: 'ChatScreen',
     },
   ];
 }

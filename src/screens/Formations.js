@@ -17,20 +17,7 @@ import { AuthContext } from '../utils/auth-context';
 import { getAllFormations, searchFormation } from '../services/formationService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Item from '../components/Item';
-const listItems2 = [
-  { image: "https://sokeo.fr/wp-content/uploads/2020/01/chris-ried-ieic5Tq8YMk-unsplash1-768x513.jpg", Titre: "Office Productivity", Description: "Office Productivity" },
-  { image: "https://sokeo.fr/wp-content/uploads/2020/01/chris-ried-ieic5Tq8YMk-unsplash1-768x513.jpg", Titre: "Photography", Description: "LifeStyle" },
-  { image: "https://sokeo.fr/wp-content/uploads/2020/01/chris-ried-ieic5Tq8YMk-unsplash1-768x513.jpg", Titre: "Marketing", Description: "LifeStyle" },
-  { image: "https://sokeo.fr/wp-content/uploads/2020/01/chris-ried-ieic5Tq8YMk-unsplash1-768x513.jpg", Titre: "Design", Description: "LifeStyle" },
-  { image: "https://sokeo.fr/wp-content/uploads/2020/01/chris-ried-ieic5Tq8YMk-unsplash1-768x513.jpg", Titre: "Personal Development", Description: "LifeStyle" },
-  { image: "https://sokeo.fr/wp-content/uploads/2020/01/chris-ried-ieic5Tq8YMk-unsplash1-768x513.jpg", Titre: "Development", Description: "LifeStyle" },
-  { image: "https://sokeo.fr/wp-content/uploads/2020/01/chris-ried-ieic5Tq8YMk-unsplash1-768x513.jpg", Titre: "Health & Fitness", Description: "LifeStyle" },
-  { image: "https://sokeo.fr/wp-content/uploads/2020/01/chris-ried-ieic5Tq8YMk-unsplash1-768x513.jpg", Titre: "LifeStyle", Description: "LifeStyle" },
-  { image: "https://sokeo.fr/wp-content/uploads/2020/01/chris-ried-ieic5Tq8YMk-unsplash1-768x513.jpg", Titre: "LifeStyle", Description: "LifeStyle" },
-  { image: "https://sokeo.fr/wp-content/uploads/2020/01/chris-ried-ieic5Tq8YMk-unsplash1-768x513.jpg", Titre: "LifeStyle", Description: "LifeStyle" },
-  { image: "https://sokeo.fr/wp-content/uploads/2020/01/chris-ried-ieic5Tq8YMk-unsplash1-768x513.jpg", Titre: "LifeStyle", Description: "LifeStyle" },
-  { image: "https://sokeo.fr/wp-content/uploads/2020/01/chris-ried-ieic5Tq8YMk-unsplash1-768x513.jpg", Titre: "LifeStyle", Description: "LifeStyle" }
-]
+
 const { width, heigth } = Dimensions.get('window');
 class Formations extends React.Component {
   static contextType = AuthContext;

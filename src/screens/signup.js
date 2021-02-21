@@ -15,6 +15,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { format } from "date-fns";
 import { StatusBar } from 'react-native';
 import { Image } from 'react-native';
+import { isEmail } from '../configs/validator';
 const initNotification = {
     message: null,
     type: 'error',
@@ -62,6 +63,10 @@ const signup = (props) => {
             ? require('../assets/images/logo.png')
             : require('../assets/images/logo.png');
     const saveCustomer = async () => {
+if(fullName!='' && phone!='' && password!='' && email!='')
+{
+    if(isEmail(email))
+    {
         try {
             const Etudiant = {
                 "nom": fullName,
@@ -70,7 +75,7 @@ const signup = (props) => {
                 "date_de_naissance": dateNaissence,
                 "mot_de_passe": password,
             };
-
+    
             await addEtudiant(Etudiant);
             setLoading(false);
             const dataNotification = {
@@ -79,7 +84,7 @@ const signup = (props) => {
             };
             setNotification(dataNotification);
             initEtudiant();
-
+    
         } catch (e) {
             setLoading(false);
             const dataNotification = {
@@ -88,6 +93,19 @@ const signup = (props) => {
             };
             setNotification(dataNotification);
         }
+    }
+    
+    else
+    {
+alert("merci de saisir un email valide");
+    }
+      
+}
+else{
+    alert("merci de remplir les champs ");
+}
+
+
     };
     const clickSave = () => {
         setLoading(true);

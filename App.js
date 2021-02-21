@@ -27,6 +27,8 @@ import CalanderEtudiant from './src/screens/CalanderEtudiant'
 import FormationByFormateur from './src/screens/FormationByFormateur'
 import ListSessionFormateur from './src/screens/ListSessionFormateur'
 import DetailSessionFormateur from './src/screens/DetailSessionFormateur'
+import chat from './src/screens/chat'
+import WriteMessage from './src/screens/WriteMessage'
 
 import signup from './src/screens/signup';
 import { AuthContext } from './src/utils/auth-context';
@@ -51,6 +53,7 @@ function MainTabFormateur() {
       <Tab.Screen name="FormationByFormateur" component={FormationByFormateur} />
       <Tab.Screen name="CalanderScreen" component={CalanderScreen} />
       <Tab.Screen name="AccountScreen" component={AccountScreen} />
+      <Tab.Screen name="ChatScreen" component={chat} />
     </Tab.Navigator>
   )
 }
@@ -66,6 +69,7 @@ function MainTabEtudiant() {
       <Tab.Screen name="FormationsScreen" component={Formations} />
       <Tab.Screen name="NotificationScreen" component={NotificationScreen} />
       <Tab.Screen name="AccountScreen" component={AccountScreen} />
+      <Tab.Screen name="ChatScreen" component={chat} />
     </Tab.Navigator>
   )
 }
@@ -193,11 +197,21 @@ function App() {
         try {
           console.log(deviceId.current);
           const u = await login(username, password,deviceId.current)
-          const user = u.data;
-          const token = "";
-          // const {token, user} = await loginWithEmail(JSON.stringify({username, password}));
-          await AsyncStorage.setItem('user', JSON.stringify({ token, user }));
-          dispatch({ type: 'SING_IN_SUCCESS', token, user });
+          console.log(u.data);
+          if(u.data!=null && u.data!="")
+          {
+            const user = u.data;
+            const token = "";
+            // const {token, user} = await loginWithEmail(JSON.stringify({username, password}));
+            await AsyncStorage.setItem('user', JSON.stringify({ token, user }));
+            dispatch({ type: 'SING_IN_SUCCESS', token, user });
+          }
+          else
+          {
+            let x = "invalid";
+            dispatch({ type: 'SING_IN_ERROR',x});
+          }
+          
         } catch (error) {
           dispatch({ type: 'SING_IN_ERROR', error });
         }
@@ -312,6 +326,16 @@ function App() {
                     name="EditPasswordScreen"
                     component={EditPasswordScreen}
                   />
+                    <Stack.Screen
+                options={{ headerShown: false }}
+                name="ChatScreen"
+                component={chat}
+              />
+                 <Stack.Screen
+                options={{ headerShown: false }}
+                name="WriteMessage"
+                component={WriteMessage}
+              />
                   <Stack.Screen
                     options={{ headerShown: false }}
                     name="DeliveryAddressScreen"
@@ -339,6 +363,16 @@ function App() {
                 options={{ headerShown: false }}
                 name="InformationAccountScreen"
                 component={InformationAccountScreen}
+              />
+                <Stack.Screen
+                options={{ headerShown: false }}
+                name="ChatScreen"
+                component={chat}
+              />
+                 <Stack.Screen
+                options={{ headerShown: false }}
+                name="WriteMessage"
+                component={WriteMessage}
               />
               <Stack.Screen
                 options={{ headerShown: false }}

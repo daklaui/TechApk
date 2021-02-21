@@ -69,7 +69,7 @@ this.setState({loading:false});
         <View style={styles.viewEmpty}>
           {headerComponent}
           <Card style={styles.cardEmpty}>
-            <Image source={require('../assets/images/empty.png')} />
+            
             <Text third medium h3 h3Style={styles.textEmpty}>
               {t('home:text_empty')}
             </Text>

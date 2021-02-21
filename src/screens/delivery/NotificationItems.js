@@ -1,56 +1,68 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {useTheme} from '@react-navigation/native';
-import {StyleSheet, View, ViewPropTypes,TouchableOpacity} from 'react-native';
+import { useTheme } from '@react-navigation/native';
+import { StyleSheet, View, ViewPropTypes, TouchableOpacity } from 'react-native';
 import Text from '../../components/Text';
 import Icon from '../../components/Icon';
 import Badge from '../../components/Badge';
 import Card from '../../components/Card';
 import currencyFormatter from '../../utils/currency-formatter';
-import {gray5} from '../../configs/colors';
-import {sizes, lineHeights} from '../../configs/fonts';
-import {shadowDefault} from '../../utils/shadow';
-
+import { gray5 } from '../../configs/colors';
+import { sizes, lineHeights } from '../../configs/fonts';
+import { shadowDefault } from '../../utils/shadow';
+import {
+  getFormationById
+} from '../../services/formationService';
 function NotificationItems(props) {
-  const {colors} = useTheme();
-  const {style,data} = props;
+  const { colors } = useTheme();
+
+  const [formation, setFormation] = React.useState()
+  const { style, data } = props;
+  
+     React.useEffect( () => {
+      getFormation();
+      console.log(formation);
+     },[])
+ 
+const getFormation=async()=>{
+  let d=  await getFormationById(data.idFormation);
+  setFormation(d.data)
+}
   return (
 
     <View style={style} >
-     <TouchableOpacity onPress={()=>props.onClick()}> 
-      <Card style={styles.container}>
-        <Icon name="receipt" color={colors.secondary} size={20} />
-        <View style={styles.right}>
-          <View style={styles.headerOrder}>
-            <Text
-              h3
-              medium
-              h3Style={[styles.textOrderId, {color: colors.secondary}]}>
-           {data.nom_du_session}
+      <TouchableOpacity onPress={() => props.onClick()}>
+        <Card style={styles.container}>
+          <Icon name="receipt" color={colors.secondary} size={20} />
+          <View style={styles.right}>
+            <View style={styles.headerOrder}>
+              <Text
+                h3
+                medium
+                h3Style={[styles.textOrderId, { color: colors.secondary }]}>
+                {formation?.titre+" "+data.nom_du_session}
+              </Text>
+              <Badge
+                value={data.niveau}
+                badgeStyle={styles.badge}
+                textStyle={styles.textBadge}
+                // status="success"
+                status={data.niveau == "Débutant" ? 'success' : data.niveau == "Intermédiaire" ? 'warning' : 'error'}
+              />
+            </View>
+            <Text third style={styles.time}>
+              {data.date_de_début} -  {data.date_de_fin}
+
             </Text>
-            <Badge
-              value={data.niveau}
-              badgeStyle={styles.badge}
-              textStyle={styles.textBadge}
-             // status="success"
-             status={data.niveau=="debutant"?'success':data.niveau=="intermédiaire"?'warning':'error'}
-            />
+            <View style={styles.item}>
+
+              <Text h4 medium h4Style={{ color: colors.primary }}>
+                {data.prix} TND
+            </Text>
+            </View>
+
           </View>
-          <Text third style={styles.time}>
-        {data.date_de_début} -  {data.date_de_fin}
-     
-          </Text>
-          <View style={styles.item}>
-            <Text secondary medium h4 h4Style={styles.nameItem}>
-           <Text>Nom de formateur</Text>
-            </Text>
-            <Text h4 medium h4Style={{color: colors.primary}}>
-             {data.prix} TND
-            </Text>
-          </View>
-          
-        </View>
-      </Card>
+        </Card>
       </TouchableOpacity>
     </View>
 

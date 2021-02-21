@@ -12,7 +12,8 @@ import Header from '../containers/Header';
 import OrderItem from './delivery/OrderItem';
 import InfoUser from './delivery/InfoUser';
 import Total from './delivery/Total';
-import {getListPlaningBySession} from '../services/formationService';
+import {getListPlaningBySession,getFormationById} from '../services/formationService';
+
 import { DefaultTabBar, } from 'react-native-scrollable-tab-view';
 import { Icon as IconReact } from 'react-native-vector-icons/Ionicons';
 import { TabView, SceneMap } from 'react-native-tab-view';
@@ -21,6 +22,7 @@ import { AuthContext } from '../utils/auth-context';
 import { Image } from 'react-native';
 import ProgressBarClassic from 'react-native-progress-bar-classic';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { DownloadImages } from '../services/etudiantService';
 const { width, height } = Dimensions.get('window');
 function formationParEtudiant(props) {
   const { colors } = useTheme();
@@ -29,6 +31,7 @@ function formationParEtudiant(props) {
   const [visible, setVisible] = React.useState(false);
   const [planing,setPlaning]=React.useState([]);
   const { navigation, route } = props;
+  const[photo,setPhoto]=React.useState();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'first', title: 'First' },
@@ -45,10 +48,20 @@ console.log(data)
 
   React.useEffect(() => {
     getPlaning();
+    getFormationById(data.idFormation).then((d)=>{
+      getImage(d.data.image);
+    })
+  
     console.log(index);
   }, []);
 
-
+  const getImage =(photoname)=>
+    {
+       setPhoto("");
+       DownloadImages(photoname).then((data)=>{
+        setPhoto("data:image/png;base64,"+data.data)
+       })
+    } 
   const getPlaning = async () => {
     const response=await getListPlaningBySession(data.id);
     let i=0;
@@ -57,10 +70,10 @@ console.log(data)
     const x=response.data.length;
     if(x>0)
     {
-      setIndex((i/response.data.length)*100);
+      setIndex((2/6)*100);
     }
-   
-    setPlaning(response.data);
+    setIndex((3/6)*100);
+    setPlaning(["Introduction","Objectifs de la POO","Encapsulation, héritage et  polymorphisme","Classe et objet","Méthodes et attributs","Hiérarchie de classe"]);
     console.log(response.data);
    
   }
@@ -102,7 +115,7 @@ console.log(data)
       {header}
 
       <Image source=
-        {{ uri: "https://sokeo.fr/wp-content/uploads/2020/01/chris-ried-ieic5Tq8YMk-unsplash1-768x513.jpg" }}
+        {{ uri: photo}}
         style={{
           width: width - 30,
           height: height / 4,
@@ -133,12 +146,12 @@ console.log(data)
 
       >
         <ScrollView tabLabel='planning' style={{ height: 500 }} >
-          {planing&&planing.map((item)=>(
+          {planing&&planing.map((item,index)=>(
           <BouncyCheckbox
-            isChecked={item.finish}
+            isChecked={index<3}
             textColor="#000"
             fillColor="red"
-            text={item.titre}
+            text={item}
             onPress={(checked) => console.log("Checked: ", checked)}
           />
           ))}

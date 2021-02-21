@@ -11,8 +11,17 @@ const urlUploadImage = API + '/api/upload';
 const urlDownloadImage = API + '/image';
 const urlGetListEtudiantBySession = API + '/getListEtudiantBySession';
 const urlListPlaningBySession = API + '/ListPlaningBySession';
+const urlListDocumentsBySession = API + '/ListDocumentsBySession';
+const urlDownloadDocument = API + '/downloadDocument';
+const UrlsessionbyFormateur = API + '/getSessionByIdFormateur';
 export const getFormations = (id) => {
     return axios.get(listFormationByFormateur + "/" +id);
+}
+
+
+
+export const getSessionByIdFormateur = (id) => {
+    return axios.get(UrlsessionbyFormateur + "/" +id);
 }
 
 export const getListSession = (id,id2) => {
@@ -32,3 +41,14 @@ export const getListEtudiantBySession = (id) => {
 export const getListPlaningBySession = (id) => {
     return axios.get(urlListPlaningBySession + "/" +id);
 }
+
+
+export const getListDocumentsBySession = (id) => {
+    return axios.get(urlListDocumentsBySession + "/" +id);
+}
+
+
+export const getDownloadDocument = (id) => {
+    return axios.get(urlDownloadDocument + "/" +id);
+}
+

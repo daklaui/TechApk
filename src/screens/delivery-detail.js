@@ -18,6 +18,7 @@ import { getFormationById ,inscription,getSessionByIdFormation} from '../service
 import { AuthContext } from '../utils/auth-context';
 import { SafeAreaView } from 'react-native';
 import { Image } from 'react-native';
+import { DownloadImages } from '../services/etudiantService';
 import ItemDelivery from '../containers/ItemDelivery';
 import { Alert } from 'react-native';
 const { width, height } = Dimensions.get('window');
@@ -27,6 +28,7 @@ function DeliveryDetailScreen(props) {
   const {userToken,user} = React.useContext(AuthContext);
   const [item, setItem] = React.useState({});
   const [listSessions, setListSessions] = React.useState([]);
+  const [photo, setPhoto] = React.useState("");
   const [idSession, setIdSession] = React.useState("");
   const [visible, setVisible] = React.useState(false);
   const { navigation, route } = props;
@@ -59,12 +61,18 @@ function DeliveryDetailScreen(props) {
   React.useEffect(() => {
     getDetFormation();
   }, []);
-
+  const getImage =(photoname)=>
+  {
+     setPhoto("");
+     DownloadImages(photoname).then((data)=>{
+      setPhoto("data:image/png;base64,"+data.data)
+     })
+  } 
 
   const getDetFormation = async () => {
     const response = await getFormationById(data);
     const responseSession=await getSessionByIdFormation(data);
- 
+    getImage(response.data.image);
     setItem(response.data);
     setListSessions(responseSession.data);
   }
@@ -97,7 +105,7 @@ function DeliveryDetailScreen(props) {
 
       <View style={{ flex: 1, flexDirection: "column" }}>
         <Image source=
-          {{ uri: item.image }}
+          {{ uri: photo }}
           style={{
             width: width - 30,
             height: height / 4,

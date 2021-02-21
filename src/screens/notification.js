@@ -22,6 +22,7 @@ import NotificationItems from './delivery/NotificationItems';
 import {
   getFormationsByIdEtudiant
 } from '../services/etudiantService';
+
 class NotificationScreen extends React.Component {
   static contextType = AuthContext;
 
@@ -77,7 +78,7 @@ class NotificationScreen extends React.Component {
         loadingMore: false,
       });
     }
-    console.log(this.state.notifications);
+   // console.log(this.state.notifications);
   };
   renderFooter = () => {
     if (!this.state.loadingMore) {
@@ -133,7 +134,7 @@ class NotificationScreen extends React.Component {
             <ScrollView showsVerticalScrollIndicator={false}>
               {
                 notifications && notifications.map(data => (
-                  <NotificationItems style={styles.item} data={data} onClick={() => this.props.navigation.navigate("DetailFormationEtudiant", { data: data })} />
+                  <NotificationItems style={styles.item} data={data} onClick={()=>{   this.props.navigation.navigate("DetailFormationEtudiant", { data: data})}} />
                 ))
               }
 
